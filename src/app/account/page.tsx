@@ -1,12 +1,12 @@
-'use client';
-import Form from '@/component/report/footer/form'
-import React,{useState} from 'react'
+"use client";
+import React from "react";
 
 const Account = () => {
-  const [triggerUpdate, setTriggerUpdate] = useState(false);
   return (
-    <Form setTriggerUpdate={setTriggerUpdate} />
-  )
-}
+    <div className="flex flex-col items-center justify-center">
+      <h1 className="text-4xl">Account</h1>
+    </div>
+  );
+};
 
-export default Account
+export default Account;

@@ -1,9 +1,12 @@
 // Form component
-"use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, FormEvent } from "react";
 import { useRouter } from "next/navigation";
 
-export default function Form ({ setTriggerUpdate }) {
+interface FormProps {
+  setTriggerUpdate: (value: boolean) => void;
+}
+
+const HeaderForm: React.FC<FormProps> = ({ setTriggerUpdate }) => {
   const [customer, setCustomer] = useState("");
   const [consultant, setConsultant] = useState("");
   const [client, setClient] = useState("");
@@ -37,10 +40,20 @@ export default function Form ({ setTriggerUpdate }) {
     fetchData();
   }, []);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
-    if (!customer || !consultant || !client || !description || !projectName || !date || !location || !tag || !sheet) {
+    if (
+      !customer ||
+      !consultant ||
+      !client ||
+      !description ||
+      !projectName ||
+      !date ||
+      !location ||
+      !tag ||
+      !sheet
+    ) {
       alert("All fields are required.");
       return;
     }
@@ -51,11 +64,21 @@ export default function Form ({ setTriggerUpdate }) {
         headers: {
           "Content-type": "application/json",
         },
-        body: JSON.stringify({ customer, consultant, client, description, projectName, date, location, tag, sheet }),
+        body: JSON.stringify({
+          customer,
+          consultant,
+          client,
+          description,
+          projectName,
+          date,
+          location,
+          tag,
+          sheet,
+        }),
       });
 
       if (res.ok) {
-        setTriggerUpdate(prev => !prev);
+        setTriggerUpdate((prev) => !prev);
         router.push("/report");
       } else {
         throw new Error("Failed to create/update a topic");
@@ -134,8 +157,10 @@ export default function Form ({ setTriggerUpdate }) {
         type="submit"
         className="bg-green-600 font-bold text-white py-3 px-6 w-fit"
       >
-        Add Topic
+        Update Header
       </button>
     </form>
   );
-}
+};
+
+export default HeaderForm;

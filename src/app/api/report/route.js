@@ -1,6 +1,6 @@
 // MongoDB operations
-import connectDB from "@/model/db";
-import Header from "@/model/header";
+import connectDB from "@/model/connect/db";
+import Header from "@/model/report/header";
 import { NextResponse } from "next/server";
 
 export async function POST(request) {

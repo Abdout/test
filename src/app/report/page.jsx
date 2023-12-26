@@ -1,15 +1,20 @@
 'use client';
-import Form from '@/component/report/header/form'
 
+
+import FooterForm from '@/component/report/footer/form';
+import HeaderForm from '@/component/report/header/form';
+import KitForm from '@/component/report/kit/form';
 import React, { useState } from 'react'
 
 const Report = () => {
   const [triggerUpdate, setTriggerUpdate] = useState(false);
 
   return (
-    <div>
+    <div className='space-y-10'> 
       
-      <Form setTriggerUpdate={setTriggerUpdate} />
+      <HeaderForm setTriggerUpdate={setTriggerUpdate} />
+      <FooterForm setTriggerUpdate={setTriggerUpdate} />
+      <KitForm setTriggerUpdate={setTriggerUpdate} />
     </div>
   )
 }

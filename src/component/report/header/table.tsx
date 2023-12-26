@@ -1,7 +1,23 @@
 'use client';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, FC } from 'react';
 
-const getHeader = async () => {
+interface HeaderProps {
+  triggerUpdate: boolean;
+}
+
+interface HeaderData {
+  customer: string;
+  consultant: string;
+  client: string;
+  description: string;
+  projectName: string;
+  date: string;
+  location: string;
+  tag: string;
+  sheet: string;
+}
+
+const getHeader = async (): Promise<{ headers: HeaderData[] } | {}> => {
   try {
     const res = await fetch("http://localhost:3000/api/report", {
       cache: "no-store",
@@ -14,22 +30,30 @@ const getHeader = async () => {
     return res.json();
   } catch (error) {
     console.log("Error loading topics: ", error);
+    return {};
   }
 };
 
-export default function Header({ triggerUpdate }) {
-  const [header, setHeader] = useState(null);
+const Header: FC<HeaderProps> = ({ triggerUpdate }) => {
+  const [header, setHeader] = useState<HeaderData | null>(null);
 
   useEffect(() => {
     const fetchHeaders = async () => {
       const data = await getHeader();
-      setHeader(data.headers[0]);
+      if ('headers' in data) {
+        setHeader(data.headers[0]);
+      }
     };
-
+  
     fetchHeaders();
   }, [triggerUpdate]);
 
-  const fields = [
+  interface Field {
+    label: string;
+    key: keyof HeaderData;
+  }
+  
+  const fields: Field[] = [
     { label: 'Customer', key: 'customer' },
     { label: 'Consultant', key: 'consultant' },
     { label: 'Client', key: 'client' },
@@ -66,3 +90,5 @@ export default function Header({ triggerUpdate }) {
     </table>
   );
 }
+
+export default Header;

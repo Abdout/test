@@ -17,9 +17,12 @@ const getFooter = async () => {
   }
 };
 
-export default function Footer ({ triggerUpdate }) {
-  const [footer, setFooter] = useState(null);
+interface IFooterProps {
+  triggerUpdate: boolean;
+}
 
+const Footer: React.FC<IFooterProps> = ({ triggerUpdate }) => {
+  const [footer, setFooter] = useState(null);
   useEffect(() => {
     const fetchFooters = async () => {
       const data = await getFooter();
@@ -52,3 +55,4 @@ return (
 );
 };
 
+export default Footer;

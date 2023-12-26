@@ -1,8 +1,35 @@
 'use client' ;
-import { useState, useEffect } from "react";
+import { useState, useEffect, FormEvent } from "react";
 import { useRouter } from "next/navigation";
 
-export default function FooterForm({ setTriggerUpdate }) {
+interface IFooterFormProps {
+  setTriggerUpdate: (value: ((prevState: boolean) => boolean) | boolean) => void;
+}
+
+interface IForm {
+  contractor: string;
+  client: string;
+  customer: string;
+  consultant: string;
+  contractorName: string;
+  clientName: string;
+  customerName: string;
+  consultantName: string;
+  contractorDesignation: string;
+  clientDesignation: string;
+  customerDesignation: string;
+  consultantDesignation: string;
+  contractorSignature: string;
+  clientSignature: string;
+  customerSignature: string;
+  consultantSignature: string;
+  contractorDate: string;
+  clientDate: string;
+  customerDate: string;
+  consultantDate: string;
+}
+
+const FooterForm: React.FC<IFooterFormProps> = ({ setTriggerUpdate }) => {
   const [contractor, setContractor] = useState("");
   const [client, setClient] = useState("");
   const [customer, setCustomer] = useState("");
@@ -44,56 +71,44 @@ export default function FooterForm({ setTriggerUpdate }) {
         setClientDesignation(footer.clientDesignation);
         setCustomerDesignation(footer.customerDesignation);
         setConsultantDesignation(footer.consultantDesignation);
-        setContractorSignature(footer.contractorSignature);
-        setClientSignature(footer.clientSignature);
-        setCustomerSignature(footer.customerSignature);
-        setConsultantSignature(footer.consultantSignature);
-        setContractorDate(footer.contractorDate);
-        setClientDate(footer.clientDate);
-        setCustomerDate(footer.customerDate);
-        setConsultantDate(footer.consultantDate);
-        
       }
     };
     fetchData();
   }, []);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
-    if (!contractor || !client || !customer || !consultant || !contractorName || !clientName || !customerName || !consultantName || !contractorDesignation || !clientDesignation || !customerDesignation || !consultantDesignation|| !contractorSignature || !clientSignature || !customerSignature || !consultantSignature || !contractorDate || !clientDate || !customerDate || !consultantDate ) {
-      alert("All fields are required.");
-      return;
-    }
+    const form: IForm = {
+      contractor,
+      client,
+      customer,
+      consultant,
+      contractorName,
+      clientName,
+      customerName,
+      consultantName,
+      contractorDesignation,
+      clientDesignation,
+      customerDesignation,
+      consultantDesignation,
+      contractorSignature,
+      clientSignature,
+      customerSignature,
+      consultantSignature,
+      contractorDate,
+      clientDate,
+      customerDate,
+      consultantDate,
+    };
 
     try {
-      const res = await fetch(`http://localhost:3000/api/report/footer`, {
+      const res = await fetch("/api/report/footer", {
         method: "POST",
         headers: {
-          "Content-type": "application/json",
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          contractor,
-          client,
-          customer,
-          consultant,
-          contractorName,
-          clientName,
-          customerName,
-          consultantName,
-          contractorDesignation,
-          clientDesignation,
-          customerDesignation,
-          consultantDesignation,
-          contractorSignature,
-          clientSignature,
-          customerSignature,
-          consultantSignature,
-          contractorDate,
-          clientDate,
-          customerDate,
-          consultantDate
-        }),
+        body: JSON.stringify(form),
       });
 
       if (res.ok) {
@@ -106,7 +121,6 @@ export default function FooterForm({ setTriggerUpdate }) {
       console.log(error);
     }
   };
-
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-3">
       <input
@@ -258,3 +272,5 @@ export default function FooterForm({ setTriggerUpdate }) {
     </form>
   );
 }
+
+export default FooterForm;

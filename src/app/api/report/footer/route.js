@@ -1,6 +1,5 @@
-// MongoDB operations
-import connectDB from "@/model/db";
-import Footer from "@/model/footer";
+import connectDB from "@/model/connect/db";
+import Footer from "@/model/report/footer";
 import { NextResponse } from "next/server";
 
 export async function POST(request) {
