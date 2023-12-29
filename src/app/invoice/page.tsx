@@ -1,9 +1,30 @@
-import React from 'react'
+"use client";
+import { Select, SelectOption } from "@/components/select";
+import Volt from "@/component/project/volt";
+import React, { useState } from "react";
 
 const Invoice = () => {
-  return (
-    <div>Invoice</div>
-  )
-}
+  const [selectedOption, setSelectedOption] = useState<
+    SelectOption[]>([]);
 
-export default Invoice
+  const options: SelectOption[] = [
+    { label: "Option 1", value: "1" },
+    { label: "Option 2", value: "2" },
+    { label: "Option 3", value: "3" },
+    // Add more options as needed
+  ];
+
+  return (
+    <div>
+      <Volt />
+      <Select
+        multiple={true}
+        options={options}
+        value={selectedOption}
+        onChange={setSelectedOption}
+      />
+    </div>
+  );
+};
+
+export default Invoice;

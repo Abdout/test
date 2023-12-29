@@ -1,8 +1,9 @@
+import KitList from '@/component/kit/list'
 import React from 'react'
 
 const Kit = () => {
   return (
-    <div>Kit</div>
+    <KitList />
   )
 }
 

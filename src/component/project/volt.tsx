@@ -1,10 +1,20 @@
-"use client";
+'use client';
 import React, { useState } from "react";
 
-const Volt = () => {
-  const [active, setActive] = useState<{ [key: string]: boolean }>({});
+const Volt = ({ onVoltChange }: { onVoltChange: (newActive: { [key: string]: boolean }) => void }) => {
+  const [active, setActive] = useState<{ [key: string]: boolean }>({
+    LV: false,
+    MV: true,
+    HV: false,
+    EV: false,
+  });
+
   const handleClick = (label: string) => {
-    setActive(prev => ({ ...prev, [label]: !prev[label] }));
+    setActive(prev => {
+      const newActive = { ...prev, [label]: !prev[label] };
+      onVoltChange(newActive);
+      return newActive;
+    });
   };
 
   const labels = ["LV", "MV", "HV", "EV"];
@@ -13,6 +23,7 @@ const Volt = () => {
     <div className="flex gap-4 mb-4">
       {labels.map((label) => (
         <button
+          type="button" // Ensure this is on the same line as the opening tag
           key={label}
           onClick={() => handleClick(label)}
           className={`w-10 h-10 border p-2 ${

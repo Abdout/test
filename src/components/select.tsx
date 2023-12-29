@@ -91,7 +91,7 @@ export function Select({ multiple, value, onChange, options }: SelectProps) {
       onBlur={() => setIsOpen(false)}
       onClick={() => setIsOpen(prev => !prev)}
       tabIndex={0}
-      className={styles.container}
+      className="relative min-h-6 border border-gray-500 flex items-center gap-2 p-2 rounded outline-none"
     >
       <span className={styles.value}>
         {multiple
@@ -102,10 +102,10 @@ export function Select({ multiple, value, onChange, options }: SelectProps) {
                   e.stopPropagation()
                   selectOption(v)
                 }}
-                className={styles["option-badge"]}
+                className="flex items-center border border-gray-500 rounded px-1 p-2 gap-1 cursor-pointer bg-transparent outline-none"
               >
                 {v.label}
-                <span className={styles["remove-btn"]}>&times;</span>
+                <span className="text-gray-500 text-xl">&times;</span>
               </button>
             ))
           : value?.label}

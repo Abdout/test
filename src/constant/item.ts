@@ -1,6 +1,11 @@
 
 export const item = [
   {
+    title: "Docs",
+    path: "/docs",
+    icon: "ph:book-thin",
+  },
+  {
     title: "Project",
     path: "/project",
     icon: "ph:folder-simple-thin",

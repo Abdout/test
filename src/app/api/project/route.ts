@@ -4,9 +4,10 @@ import { NextResponse } from "next/server";
 import { NextRequest } from "next/server";
 
 export async function POST(request: NextRequest) {
-  const { title, description } = await request.json() as { title: string, description: string };
+  const { title, description, voltages, lvOptions, mvOptions, hvOptions, evOptions } = await request.json() as { title: string, description: string, voltages: any, lvOptions: any, mvOptions: any, hvOptions: any, evOptions: any };
+  console.log({ title, description, voltages, lvOptions, mvOptions, hvOptions, evOptions });
   await connectDB();
-  await Project.create({ title, description });
+  await Project.create({ title, description, voltages, lvOptions, mvOptions, hvOptions, evOptions });
   return NextResponse.json({ message: "Project Created" }, { status: 201 });
 }
 

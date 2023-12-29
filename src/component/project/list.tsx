@@ -1,4 +1,4 @@
-'use client';
+"use client";
 import { useGlobalState } from "@/provider/global";
 import React from "react";
 import Delete from "./delete";
@@ -6,6 +6,7 @@ import SmIcon from "@/component/atom/icon/sm";
 import Modal from "@/component/atom/modal/modal";
 import Edit from "./edit";
 import Create from "./create";
+import Link from "next/link";
 
 interface Project {
   _id: string;
@@ -18,22 +19,6 @@ interface ModalState {
   id: string | null;
 }
 
-const getProject = async (): Promise<Project[]> => {
-  try {
-    const res = await fetch("http://localhost:3000/api/project", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    const data: Project[] = await res.json();
-    return data;
-  } catch (error) {
-    console.error("Error fetching projects: ", error);
-    return [];
-  }
-};
-
 const ProjectList: React.FC = () => {
   const { modal, openModal, project } = useGlobalState();
 
@@ -45,20 +30,28 @@ const ProjectList: React.FC = () => {
 
   return (
     <>
-      {modal.open && (
-        modal.id !== null && projectToEdit ? 
-        <Modal content={<Edit id={modal.id} title={projectToEdit.title} description={projectToEdit.description} />} /> :
-        <Modal content={<Create />} />
-      )}
+      {modal.open &&
+        (modal.id !== null && projectToEdit ? (
+          <Modal
+            content={
+              <Edit
+                id={modal.id}
+                title={projectToEdit.title}
+                description={projectToEdit.description}
+              />
+            }
+          />
+        ) : (
+          <Modal content={<Create />} />
+        ))}
       {project.map((t: Project) => (
-        <div
-          key={t._id}
-          className="p-4 border m-2 flex flex-col items-start"
-        >
-          <div>
-            <h2 className="font-bold text-2xl">{t.title}</h2>
-            <div>{t.description}</div>
-          </div>
+        <div key={t._id} className="p-4 border m-2 flex flex-col items-start">
+          <Link href={`/project/${t._id}`}>
+            <div>
+              <h2 className="font-bold text-2xl">{t.title}</h2>
+              <div>{t.description}</div>
+            </div>
+          </Link>
 
           <div className="flex gap-2">
             <Delete id={t._id} />
@@ -76,11 +69,11 @@ const ProjectList: React.FC = () => {
         </div>
       ))}
 
-      <button className="border py-10" onClick={() => openModal('')}>
+      <button className="border py-10" onClick={() => openModal("")}>
         Create Project
       </button>
     </>
   );
-}
+};
 
 export default ProjectList;
