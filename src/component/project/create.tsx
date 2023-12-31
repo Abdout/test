@@ -1,11 +1,34 @@
-import { FC, FormEvent, useState } from "react";
+"use client";
+import { FC, FormEvent, useState, useEffect } from "react";
 import { useGlobalState } from "@/provider/global";
 import Volt from "@/component/project/volt";
-import LvSelect from "./selectlv";
-import MvSelect from "./selectmv";
-import HvSelect from "./selecthv";
-import EvSelect from "./selectev";
 import { SelectOption } from "@/components/select";
+import { Icon } from "@iconify/react";
+
+import Item from "./item";
+
+import {
+  lv,
+  mv,
+  hv,
+  ev,
+  LvSwgr,
+  MvSwgr,
+  HvSwgr,
+  EvSwgr,
+  LvTrafo,
+  MvTrafo,
+  HvTrafo,
+  EvTrafo,
+  LvCable,
+  MvCable,
+  HvCable,
+  EvCable,
+  LvRmu,
+  MvRmu,
+  HvRmu,
+  EvRmu,
+} from "@/constant/project/item";
 
 const totalSteps = 4;
 
@@ -23,8 +46,26 @@ const Create: FC = () => {
   const [mvOptions, setMvOptions] = useState<SelectOption[]>([]);
   const [hvOptions, setHvOptions] = useState<SelectOption[]>([]);
   const [evOptions, setEvOptions] = useState<SelectOption[]>([]);
+  const [lvSwgr, setLvSwgr] = useState<SelectOption[]>([]);
+  const [lvTrafo, setLvTrafo] = useState<SelectOption[]>([]);
+  const [lvRmu, setLvRmu] = useState<SelectOption[]>([]);
+  const [lvCable, setLvCable] = useState<SelectOption[]>([]);
+  const [mvSwgr, setMvSwgr] = useState<SelectOption[]>([]);
+  const [mvTrafo, setMvTrafo] = useState<SelectOption[]>([]);
+  const [mvRmu, setMvRmu] = useState<SelectOption[]>([]);
+  const [mvCable, setMvCable] = useState<SelectOption[]>([]);
+
+  const [hvSwgr, setHvSwgr] = useState<SelectOption[]>([]);
+  const [hvTrafo, setHvTrafo] = useState<SelectOption[]>([]);
+  const [hvRmu, setHvRmu] = useState<SelectOption[]>([]);
+  const [hvCable, setHvCable] = useState<SelectOption[]>([]);
+
+  const [evSwgr, setEvSwgr] = useState<SelectOption[]>([]);
+  const [evTrafo, setEvTrafo] = useState<SelectOption[]>([]);
+  const [evRmu, setEvRmu] = useState<SelectOption[]>([]);
+  const [evCable, setEvCable] = useState<SelectOption[]>([]);
   const [currentStep, setCurrentStep] = useState(1);
-  const progress = (currentStep / totalSteps) * 100;
+  // const progress = (currentStep / totalSteps) * 100;
 
   const nextStep = () => {
     if (currentStep < totalSteps) {
@@ -56,6 +97,22 @@ const Create: FC = () => {
           mvOptions,
           hvOptions,
           evOptions,
+          lvSwgr,
+          lvTrafo,
+          lvCable,
+          lvRmu,
+          mvSwgr,
+          mvTrafo,
+          mvCable,
+          mvRmu,
+          hvSwgr,
+          hvTrafo,
+          hvCable,
+          hvRmu,
+          evSwgr,
+          evTrafo,
+          evCable,
+          evRmu,
         }),
       });
 
@@ -72,65 +129,255 @@ const Create: FC = () => {
     }
   };
 
+  const [steps, setSteps] = useState<string[]>([]);
+
+  useEffect(() => {
+    const newSteps = [];
+    if (voltages.LV) newSteps.push("LV");
+    if (voltages.MV) newSteps.push("MV");
+    if (voltages.HV) newSteps.push("HV");
+    if (voltages.EV) newSteps.push("EV");
+    setSteps(newSteps);
+  }, [voltages]);
+
+  const totalSteps = 2 + steps.length; // Update total steps
+
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <div className="h-[6px] relative bg-yellow-100">
-        <div
-          className="absolute h-full bg-yellow-400"
-          style={{ width: `${progress}%` }}
-        />
-      </div>
+    <div className="flex flex-col items-center justify-between h-full px-4 pb-4">
+      <form onSubmit={handleSubmit} className="flex flex-col items-center space-y-4 h-full">
+        <div className="flex justify-center items-center h-full">
+          <div>
+            <button
+              type="button"
+              onClick={prevStep}
+              style={{ opacity: currentStep === 1 ? 0.3 : 1 }}
+            >
+              <Icon icon="ep:arrow-left" width="2em" height="2em" />
+            </button>
+          </div>
 
-      <div className="flex justify-between">
-        <button type="button" onClick={prevStep}>
-          Back
-        </button>
-        <button type="button" onClick={nextStep}>
-          Next
-        </button>
-      </div>
+          {currentStep === 1 && (
+            <div>
+              <h1 className="flex justify-center items-center text-2xl">
+                General
+              </h1>
+              <input
+                onChange={(e) => setTitle(e.target.value)}
+                value={title}
+                className="border border-slate-500 px-8 py-2"
+                type="text"
+                placeholder="Topic Title"
+              />
 
-      {currentStep === 1 && (
-        <div>
-          <input
-            onChange={(e) => setTitle(e.target.value)}
-            value={title}
-            className="border border-slate-500 px-8 py-2"
-            type="text"
-            placeholder="Topic Title"
-          />
+              <input
+                onChange={(e) => setDescription(e.target.value)}
+                value={description}
+                className="border border-slate-500 px-8 py-2"
+                type="text"
+                placeholder="Topic Description"
+              />
+            </div>
+          )}
 
-          <input
-            onChange={(e) => setDescription(e.target.value)}
-            value={description}
-            className="border border-slate-500 px-8 py-2"
-            type="text"
-            placeholder="Topic Description"
-          />
+          {currentStep === 2 && (
+            <div className="space-y-4">
+              <h1 className="flex justify-center items-center text-2xl">
+                Item
+              </h1>
+              <Volt onVoltChange={setVoltages} />
+              {voltages.LV && (
+                <Item label="LV" options={lv} onOptionChange={setLvOptions} />
+              )}
+              {voltages.MV && (
+                <Item label="MV" options={mv} onOptionChange={setMvOptions} />
+              )}
+              {voltages.HV && (
+                <Item label="HV" options={hv} onOptionChange={setHvOptions} />
+              )}
+              {voltages.EV && (
+                <Item label="EV" options={ev} onOptionChange={setEvOptions} />
+              )}
+            </div>
+          )}
+
+          {steps[currentStep - 3] === "LV" && (
+            <div>
+              <h1 className="flex justify-center items-center text-2xl">
+                Low Voltage
+              </h1>
+              {lvOptions.some((option) => option.label === "Swgr") && (
+                <Item
+                  label="LV Swgr"
+                  options={LvSwgr}
+                  onOptionChange={setLvSwgr}
+                />
+              )}
+              {lvOptions.some((option) => option.label === "Trafo") && (
+                <Item
+                  label="LV Trafo"
+                  options={LvTrafo}
+                  onOptionChange={setLvTrafo}
+                />
+              )}
+              {lvOptions.some((option) => option.label === "Cable") && (
+                <Item
+                  label="LV Cable"
+                  options={LvCable}
+                  onOptionChange={setLvCable}
+                />
+              )}
+              {lvOptions.some((option) => option.label === "RMU") && (
+                <Item
+                  label="LV RMU"
+                  options={LvRmu}
+                  onOptionChange={setLvRmu}
+                />
+              )}
+            </div>
+          )}
+
+          {steps[currentStep - 3] === "MV" && (
+            <div>
+              <h1 className="flex justify-center items-center text-2xl">
+                Medium Voltage
+              </h1>
+              {mvOptions.some((option) => option.label === "Swgr") && (
+                <Item
+                  label="MV Swgr"
+                  options={MvSwgr}
+                  onOptionChange={setMvSwgr}
+                />
+              )}
+              {mvOptions.some((option) => option.label === "Trafo") && (
+                <Item
+                  label="MV Trafo"
+                  options={MvTrafo}
+                  onOptionChange={setMvTrafo}
+                />
+              )}
+              {mvOptions.some((option) => option.label === "Cable") && (
+                <Item
+                  label="MV Cable"
+                  options={MvCable}
+                  onOptionChange={setMvCable}
+                />
+              )}
+              {mvOptions.some((option) => option.label === "RMU") && (
+                <Item
+                  label="MV RMU"
+                  options={MvRmu}
+                  onOptionChange={setMvRmu}
+                />
+              )}
+            </div>
+          )}
+
+          {steps[currentStep - 3] === "HV" && (
+            <div>
+              <h1 className="flex justify-center items-center text-2xl">
+                High Voltage
+              </h1>
+              {hvOptions.some((option) => option.label === "Swgr") && (
+                <Item
+                  label="HV Swgr"
+                  options={HvSwgr}
+                  onOptionChange={setHvSwgr}
+                />
+              )}
+              {hvOptions.some((option) => option.label === "Trafo") && (
+                <Item
+                  label="HV Trafo"
+                  options={HvTrafo}
+                  onOptionChange={setHvTrafo}
+                />
+              )}
+              {hvOptions.some((option) => option.label === "Cable") && (
+                <Item
+                  label="HV Cable"
+                  options={HvCable}
+                  onOptionChange={setHvCable}
+                />
+              )}
+              {hvOptions.some((option) => option.label === "RMU") && (
+                <Item
+                  label="HV RMU"
+                  options={HvRmu}
+                  onOptionChange={setHvRmu}
+                />
+              )}
+            </div>
+          )}
+
+          {steps[currentStep - 3] === "EV" && (
+            <div>
+              <h1 className="flex justify-center items-center text-2xl">
+                Extra High Voltage
+              </h1>
+              {evOptions.some((option) => option.label === "Swgr") && (
+                <Item
+                  label="EV Swgr"
+                  options={EvSwgr}
+                  onOptionChange={setEvSwgr}
+                />
+              )}
+              {evOptions.some((option) => option.label === "Trafo") && (
+                <Item
+                  label="EV Trafo"
+                  options={EvTrafo}
+                  onOptionChange={setEvTrafo}
+                />
+              )}
+              {evOptions.some((option) => option.label === "Cable") && (
+                <Item
+                  label="EV Cable"
+                  options={EvCable}
+                  onOptionChange={setEvCable}
+                />
+              )}
+              {evOptions.some((option) => option.label === "RMU") && (
+                <Item
+                  label="EV RMU"
+                  options={EvRmu}
+                  onOptionChange={setEvRmu}
+                />
+              )}
+            </div>
+          )}
+          <div>
+            <button
+              type="button"
+              onClick={nextStep}
+              style={{ opacity: currentStep === totalSteps ? 0.3 : 1 }}
+            >
+              <Icon icon="ep:arrow-right" width="2em" height="2em" />
+            </button>
+          </div>
         </div>
-      )}
-
-      {currentStep === 2 && (
-        <div className="space-y-4">
-          <h1 className="flex justify-center items-center text-2xl">Item</h1>
-          <Volt onVoltChange={setVoltages} />
-          {voltages.LV && <LvSelect onOptionChange={setLvOptions} />}
-          {voltages.MV && <MvSelect onOptionChange={setMvOptions} />}
-          {voltages.HV && <HvSelect onOptionChange={setHvOptions} />}
-          {voltages.EV && <EvSelect onOptionChange={setEvOptions} />}
+        <div className="flex justify-between items-center h-full">
+          {/* ... */}
         </div>
-      )}
-
-      {currentStep === 3 && <div>Third Step</div>}
-      {currentStep === 4 && <div>Fourth Step</div>}
-
-      <button
-        type="submit"
-        className="px-6 py-3 bg-yellow-400 w-full font-bold rounded mt-4"
-      >
-        Add Topic
-      </button>
-    </form>
+        <div className="flex flex-col items-center space-y-4">
+          <div className="flex justify-center space-x-2">
+            {Array.from({ length: totalSteps }).map((_, step) => (
+              <div
+                key={step}
+                className={`h-2 w-2 rounded-full ${
+                  step + 1 === currentStep ? "bg-yellow-500" : "bg-gray-500"
+                }`}
+              />
+            ))}
+          </div>
+          <div>
+            <button
+              type="submit"
+              className="px-6 py-3 bg-yellow-400 w-full font-bold rounded mt-4"
+            >
+              Add Topic
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
   );
 };
 

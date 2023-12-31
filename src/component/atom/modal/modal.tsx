@@ -17,7 +17,7 @@ function Modal({ content }: Props) {
   return (
     <div className="fixed inset-0 w-full h-screen z-50 flex justify-center items-center">
     <div className="absolute inset-0 w-full h-screen bg-black bg-opacity-20" onClick={closeModal}></div>
-    <div className="relative m-4 p-8 max-w-xl w-[25rem] z-50 rounded bg-[#fcfcfc]  sm:text-sm">
+    <div className="relative m-4 p-8 max-w-2xl w-[25rem] z-50 bg-[#fcfcfc]  sm:text-sm">
       {content}
     </div>
   </div>
