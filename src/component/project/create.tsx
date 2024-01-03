@@ -81,7 +81,7 @@ const Create: FC = () => {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     console.log(voltages); // Add this line
-
+  
     try {
       console.log({ title, description, voltages });
       const res = await fetch("http://localhost:3000/api/project", {
@@ -93,31 +93,35 @@ const Create: FC = () => {
           title,
           description,
           voltages,
-          lvOptions,
-          mvOptions,
-          hvOptions,
-          evOptions,
-          lvSwgr,
-          lvTrafo,
-          lvCable,
-          lvRmu,
-          mvSwgr,
-          mvTrafo,
-          mvCable,
-          mvRmu,
-          hvSwgr,
-          hvTrafo,
-          hvCable,
-          hvRmu,
-          evSwgr,
-          evTrafo,
-          evCable,
-          evRmu,
+          lvOptions: {
+            lvSwgr,
+            lvTrafo,
+            lvCable,
+            lvRmu
+          },
+          mvOptions: {
+            mvSwgr,
+            mvTrafo,
+            mvCable,
+            mvRmu
+          },
+          hvOptions: {
+            hvSwgr,
+            hvTrafo,
+            hvCable,
+            hvRmu
+          },
+          evOptions: {
+            evSwgr,
+            evTrafo,
+            evCable,
+            evRmu
+          },
         }),
       });
-
+  
       console.log("Fetch response:", res);
-
+  
       if (res.ok) {
         closeModal();
         await fetchProject();

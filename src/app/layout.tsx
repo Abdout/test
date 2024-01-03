@@ -5,6 +5,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 import Side from "@/component/layout/side";
 import Header from "@/component/layout/header";
 import ContextProvider from "@/provider/ContextProvider";
+import { ProjectProvider } from "@/provider/project";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -28,7 +29,9 @@ export default function RootLayout({
           </div>
           <div className="w-4/5 flex flex-col">
             <Header />
+            <ProjectProvider>
             {children}
+            </ProjectProvider>
           </div>
         </ContextProvider>
         </body>

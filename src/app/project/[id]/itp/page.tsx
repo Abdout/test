@@ -1,9 +1,17 @@
-import React from 'react'
+"use client";
+import Index from "@/component/project/itp";
+import React from "react";
 
-const ITP = () => {
-  return (
-    <div>ITP</div>
-  )
+interface Params {
+  id: string;
 }
 
-export default ITP
+const ITP = ({ params }: { params: Params }) => {
+  return (
+    <div>
+      <Index params={params} />
+    </div>
+  );
+};
+
+export default ITP;
